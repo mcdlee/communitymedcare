@@ -4,7 +4,7 @@ hos <- levels(as.factor(c(as.character(db$hos1Name),as.character(db$hos2Name), a
 
 shinyUI(
   pageWithSidebar(
-    headerPanel(title="Orz"),
+    headerPanel(title="社區醫療群"),
     
     sidebarPanel(
       selectInput("hospital", "Choose a hospital:", 

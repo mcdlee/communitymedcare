@@ -9,8 +9,12 @@ db <- read.csv("content/clinicGPS.csv")
 for(i in 1:(length(db)-2)){
   db[[i]] <- as.factor(db[[i]])
 }
+
+# get group Pool for color
+
 groupP <- levels(droplevels(db$groupRef)) #for color
 groupPool <- sample(groupP, length(groupP), replace=FALSE) #dirty code
+
 
 # filterData
 filterData <- function (crit, select=c("clinicName", "clinicAddr", "lon", "lat", "groupName")) {
@@ -19,6 +23,7 @@ filterData <- function (crit, select=c("clinicName", "clinicAddr", "lon", "lat",
                select=select)
   return(L1)
 }
+
 
 #from data.frame to list
 getList <- function (df) {
@@ -51,7 +56,11 @@ plotMap <- function(data) {
   center <- getCenter(data)
   list <- getList(data)
   L2 <- Leaflet$new()
-  L2$setView(center, 11)
+  L2$setView(center)
+  L2$tileLayer(
+    provider = "Stamen.Watercolor",
+    maxZoom = 18 
+  )
   L2$geoJson(toGeoJSON(list),
              onEachFeature = '#! function(feature, layer){
               layer.bindPopup(feature.properties.popup)
