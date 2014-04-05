@@ -10,31 +10,36 @@ for(i in 1:(length(db)-2)){
   db[[i]] <- as.factor(db[[i]])
 }
 
-# get group Pool for color
-
-groupP <- levels(droplevels(db$groupRef)) #for color
-groupPool <- sample(groupP, length(groupP), replace=FALSE) #dirty code
-
+# filterCity
+filterCity <- function (city){
+  L0 <- subset(db, city=city)
+  return(L0)
+}
 
 # filterData
-filterData <- function (crit, select=c("clinicName", "clinicAddr", "lon", "lat", "groupName")) {
+filterData <- function (crit, select=c("clinicName", "clinicAddr", "lon", "lat", "groupName", "groupRef")) {
   L1 <- subset(db, hos1Name==crit |hos2Name==crit |hos3Name==crit | hos4Name==crit,
-               drop=TRUE,
-               select=select)
+               drop=TRUE, select=select)
   return(L1)
 }
 
 
+
+
 #from data.frame to list
 getList <- function (df) {
-  L2 <- dlply(df, .(X), .drop=TRUE,
+  #for color
+  groupPool <<- levels(droplevels(df$groupName))
+  groupNum <<- length(groupPool)
+  colorPal <<- hue_pal()(groupNum)
+  L2 <- dlply(df, .(X),.drop=TRUE,
         summarize,
         Name = clinicName,
         Addr = clinicAddr,
         group = groupName,
         groupRef = groupRef,
         longitude=lon, latitude=lat,
-        fillColor = hue_pal()(length(groupPool))[match(groupRef, groupPool)],
+        fillColor = colorPal[match(groupName, groupPool)],
         popup = sprintf("%s <br/> %s", clinicName, groupName)
         )
   
@@ -51,17 +56,16 @@ getCenter <- function(data) {
   return(center)
 }
 
+
 #from data to list then map
 plotMap <- function(data) {
   center <- getCenter(data)
   list <- getList(data)
-  L2 <- Leaflet$new()
-  L2$setView(center)
-  L2$tileLayer(
-    provider = "Stamen.Watercolor",
-    maxZoom = 18 
-  )
-  L2$geoJson(toGeoJSON(list),
+  L3 <- Leaflet$new()
+  L3$set(width=800, height=500)
+  L3$setView(center,11)
+  L3$tileLayer(provider = 'MapQuestOpen.OSM')
+  L3$geoJson(toGeoJSON(list),
              onEachFeature = '#! function(feature, layer){
               layer.bindPopup(feature.properties.popup)
               } !#',
@@ -70,10 +74,11 @@ plotMap <- function(data) {
               radius: 8,
               fillColor: feature.properties.fillColor || 'red',
               color: '#000',
-              weight: 1,
+              weight: 0.5,
               fillOpacity: 0.7
               })
               } !#")
-  L2$fullScreen(TRUE)
-  return(L2)
+  L3$legend(position="bottomright", colors = colorPal, labels=groupPool)
+  L3$fullScreen(TRUE)
+  return(L3)
 }
