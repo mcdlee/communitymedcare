@@ -20,3 +20,8 @@ community med care
 4. [OpenStreetMap](http://www.openstreetmap.org)
 
 授權：程式碼以 BSD 授權。授權條款可以分別參見其[網路複本][LICENSE-LINK]以及 `LICENSE_BSD`。
+
+
+Screenshot
+----------------------
+![Screenshot](screenshot.png)
