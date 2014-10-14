@@ -8,12 +8,12 @@ shinyUI(
     
     sidebarPanel(
       selectInput("hospital", "Choose a hospital:", 
-          choices= as.factor(hos)),
+          choices= hos),
       tableOutput("table")
     ),
     mainPanel(
       h3(textOutput("text")),
-      mapOutput("map")
+      chartOutput("map", 'leaflet')
     )
   )
 )
