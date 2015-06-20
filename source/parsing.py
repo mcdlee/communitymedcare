@@ -16,11 +16,11 @@ def rm_blank(s):
 db = [["clinicRef", "clinicName", "clinicAddr", "city", "groupRef", "groupName", "hos1Ref", "hos1Name", "hos2Ref", "hos2Name", "hos3Ref", "hos3Name", "hos4Ref", "hos4Name"]]
 
 url_primer = 'http://www.nhi.gov.tw/OnlineQuery/FamilyDrSearch.aspx?menu=20&menu_id=926&webdata_id=3661&WD_ID=929&QueryType=2&City=&Area=&HName=&HID=&CName=&CID=&H1Name=&H1ID=&page='
-for t in range(1,251):
+for t in range(1,305):
     url = url_primer +`t`
     html = urllib2.urlopen(url).read()
     tree = etree.HTML(html)
-    clin_list = tree[1][0][2][1][3][5][0][0][1][1][0][0][0]
+    clin_list = tree[1][0][2][1][3][6][0][0][1][1][0][0][0]
     for i in range(1,len(clin_list)):
         clinic_ref = rm_blank(clin_list[i][3].text.encode('utf-8'))
         clinic_name = rm_blank(clin_list[i][3][1].text.encode('utf-8'))
@@ -49,7 +49,7 @@ for t in range(1,251):
             hos_4_ref = ''
             hos_4_name = ''
         db.append([clinic_ref, clinic_name, clinic_addr, city, group_ref, group_name, hos_1_ref, hos_1_name, hos_2_ref, hos_2_name, hos_3_ref, hos_3_name, hos_4_ref, hos_4_name])
-
+	print("Add a new record")
 import csv
 
 with open("../content/clinic_list.csv", "wb") as f:
