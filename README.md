@@ -5,7 +5,7 @@ community med care
 
 資料來源：http://www.nhi.gov.tw/OnlineQuery/FamilyDrSearch.aspx
 
-1. `content/clinic_list.csv` 是 2015年6月19日使用 `source/parsing.py` 從健保署的資料抓下來
+1. `content/clinic_list.csv` 是 2016年3月3日使用 `source/parsing.py` 從健保署的資料抓下來
 
 2. `content/clinicGPS.csv` 是利用 `source/getGPS.R` 透過 Google geocode 得到 GPS 座標，但有些經過手動修改。
 
